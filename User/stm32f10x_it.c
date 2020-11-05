@@ -22,7 +22,12 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f10x_it.h"
+
+// #include "stm32f10x_it.h"
+#include "headfile.h"
+
+uint16_t count;
+
 
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
@@ -136,6 +141,41 @@ void SysTick_Handler(void)
 {
 }
 
+void TIM2_IRQHandler(void)
+{
+	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
+	{
+    Data_Acquisition(); 
+    LowSpeed_Measure();
+    HighSpeed_Measure();
+    RotationDirection();
+    CleanFlag();
+		TIM_ClearITPendingBit(TIM2, TIM_FLAG_Update);
+	}
+}
+
+void TIM3_IRQHandler(void)
+{
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) == SET)
+	{
+    count++;
+    if(count == 100)
+    {
+      printf("\rHall1_Count = %d",Hall1_Count);
+      printf("\rHall2_Count = %d",Hall2_Count);
+      printf("\rHall3_Count = %d",Hall3_Count);
+      printf("\rHall1_time = %f",Hall1_time);
+      printf("\rHall2_time = %f",Hall2_time);
+      printf("\rHall3_time = %f",Hall3_time);
+      printf("\rPin = %d %d %d",Hall_Code[0],Hall_Code[1],Hall_Code[2]);
+      
+      OutPutSomething();
+      LED_TOGGLE;
+      count = 0;
+    }
+		TIM_ClearITPendingBit(TIM3, TIM_FLAG_Update);
+	}
+}
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */

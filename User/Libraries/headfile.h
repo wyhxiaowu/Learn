@@ -2,6 +2,7 @@
 #define	__HEADFILE_H
 
 #include "stm32f10x.h"
+#include "stm32f10x_it.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -12,7 +13,7 @@
 #include "LED.h"
 #include "TIM.h"
 #include "usart.h"
-
+#include "text.h"
 
 
 
